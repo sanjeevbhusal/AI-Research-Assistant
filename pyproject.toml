@@ -1,0 +1,13 @@
+[project]
+name = "ai-research-assitant"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9.23"
+dependencies = [
+    "dotenv>=0.9.9",
+    "langchain>=0.3.30",
+    "langchain-openai>=0.3.35",
+    "pydantic>=2.13.4",
+    "requests>=2.32.5",
+]
