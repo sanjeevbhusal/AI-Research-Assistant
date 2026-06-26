@@ -1,13 +1,19 @@
 ## Summary
 
-Create a AI system that researchs about a certain topic using google search. User provides list of topics they are interested in, system does all the research and generates a report.
-The system will search for articles/blogs/social media posts that ranked in google in last 24 hours.
+Create a AI system that researchs about a certain topic using google search. User says what they are interested in, system does all the research and generates a report.
 
-1. for each topic, system will fetch top 10 resource from google.
-2. for each resouce, system will decide if it is relevant enough. A resource is only relevant if it meets the criteria. Eg: Only use resources published by big tech labs such as Google, OpenAI, Anthropic, Mistral etc and ignore the ones published by startups or published for marketing purposes etc.
-3. For each relevant resource, system will fetch the entire content.
-4. It will then summarize the content since articles can be thousands of words.
-5. Finally, system will generate a report using the summarized article
+There are 2 variations of this approach.
+
+1. Predictable approach: In this approach, steps are linear and pre-defined.
+   1. for each topic, system will fetch top 10 resource from google.
+   2. for each resouce, system will decide if it is relevant enough. A resource is only relevant if it meets the criteria. Eg: Only use resources published by big tech labs such as Google, OpenAI, Anthropic, Mistral etc and ignore the ones published by startups or published for marketing purposes etc.
+   3. For each relevant resource, system will fetch the entire content.
+   4. It will then summarize the content since articles can be thousands of words.
+   5. Finally, system will generate a report using the summarized article
+2. Agentic approach: In this approach, agent chooses the step it wants to perform.
+   1. User supplies a query string. Eg: Reserch about new topics in AI agents context engineering space.
+   2. Agent then decides what to do next. It can make google search, fetch web pages (scraping) or directly answer the question.
+   3. Agent runs on a loop until it decides the task goal has been reached i.e. generating a report.
 
 
 <img width="1786" height="787" alt="image" src="https://github.com/user-attachments/assets/f60e0992-6e90-4106-9bee-aaf07f454357" />
@@ -31,10 +37,14 @@ The system will search for articles/blogs/social media posts that ranked in goog
 
    `.env` is gitignored, so your credentials stay out of version control.
 
-2. Run the script:
+# First approach
+
+## Running it
+
+1. Run the script:
 
    ```sh
-   uv run main.py
+   uv run ai-research-assitant/script.py
    ```
 
 ## Detailed Technical Plan
@@ -95,6 +105,98 @@ The system will search for articles/blogs/social media posts that ranked in goog
 
 > Note:
 > There are other approaches to building a AI Research Assitant. Eg: You can paste all the page contents into LLM in one go and ask it to generate report. I choose this approach to ensure less halucination and to preserve tokens wherever possible.
+
+## Output generated
+
+When the script is run, output for each step is logged to terminal. It looks something like:
+
+```sh
+uv run main.py
+
+2026-06-25 23:59:54,489 INFO [__main__] Fetching search results for ['AI Agents', 'AI Context management', 'New AI Benchmarks', 'Coding agents', 'AI Token Cost Management']
+2026-06-26 00:00:04,696 INFO [__main__] Found 29 results. Filtering for relevance
+2026-06-26 00:00:09,729 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:00:09,746 INFO [__main__] Filtered 15 results. Fetching their markdown contents
+2026-06-26 00:00:18,976 INFO [__main__] Fetched markdown content for https://news.mit.edu/2026/improving-ai-agent-speed-and-energy-efficiency-0625
+2026-06-26 00:01:43,870 INFO [__main__] Fetched markdown content for https://openai.com/index/how-agents-are-transforming-work/
+2026-06-26 00:01:49,740 INFO [__main__] Fetched markdown content for https://www.reddit.com/r/AI_Agents/comments/1uenk8t/building_a_feedback_memory_layer_for_ai_agents/
+2026-06-26 00:02:02,192 INFO [__main__] Fetched markdown content for https://www.oneadvanced.com/resources/ai-agents-examples/
+2026-06-26 00:02:09,770 INFO [__main__] Fetched markdown content for https://krazimo.com/ai-agents-for-business/
+2026-06-26 00:02:21,240 INFO [__main__] Fetched markdown content for https://github.com/volcengine/OpenViking
+2026-06-26 00:02:25,102 INFO [__main__] Fetched markdown content for https://tana.inc/blog/what-is-context-engineering-for-ai-agents
+2026-06-26 00:02:30,937 INFO [__main__] Fetched markdown content for https://www.ovaledge.com/blog/agentic-context-engineering
+2026-06-26 00:02:42,492 INFO [__main__] Fetched markdown content for https://www.oreilly.com/radar/so-long-and-thanks-for-all-the-context/
+2026-06-26 00:02:48,640 INFO [__main__] Fetched markdown content for https://www.ibm.com/think/topics/ai-agent-deployment
+2026-06-26 00:03:09,827 INFO [__main__] Fetched markdown content for https://sedai.io/blog/ai-failed-human-benchmark
+2026-06-26 00:03:17,894 INFO [__main__] Fetched markdown content for https://tech.einnews.com/pr_news/921958846/pearl-education-launches-grade-an-open-benchmark-for-evaluating-ai-on-education-program-data
+2026-06-26 00:03:25,299 INFO [__main__] Fetched markdown content for https://www.linkedin.com/posts/parikshitpruthi_palantir-just-broke-your-ai-benchmark-obsession-activity-7475778576059932673-zWEp
+2026-06-26 00:03:31,430 INFO [__main__] Fetched markdown content for https://www.rand.org/pubs/research_reports/RRA3892-2.html
+2026-06-26 00:03:49,279 INFO [__main__] Fetched markdown content for https://www.getaleph.com/answers/cac-payback-period-saas-2026
+2026-06-26 00:03:49,280 INFO [__main__] Generating summaries
+2026-06-26 00:03:55,219 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:03:55,220 INFO [__main__] Summarized https://news.mit.edu/2026/improving-ai-agent-speed-and-energy-efficiency-0625
+2026-06-26 00:04:01,884 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:01,886 INFO [__main__] Summarized https://openai.com/index/how-agents-are-transforming-work/
+2026-06-26 00:04:04,782 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:04,788 INFO [__main__] Summarized https://www.reddit.com/r/AI_Agents/comments/1uenk8t/building_a_feedback_memory_layer_for_ai_agents/
+2026-06-26 00:04:11,080 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:11,083 INFO [__main__] Summarized https://www.oneadvanced.com/resources/ai-agents-examples/
+2026-06-26 00:04:21,708 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:21,736 INFO [__main__] Summarized https://krazimo.com/ai-agents-for-business/
+2026-06-26 00:04:25,425 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:25,435 INFO [__main__] Summarized https://github.com/volcengine/OpenViking
+2026-06-26 00:04:30,352 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:30,356 INFO [__main__] Summarized https://tana.inc/blog/what-is-context-engineering-for-ai-agents
+2026-06-26 00:04:35,034 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:35,043 INFO [__main__] Summarized https://www.ovaledge.com/blog/agentic-context-engineering
+2026-06-26 00:04:41,474 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:41,477 INFO [__main__] Summarized https://www.oreilly.com/radar/so-long-and-thanks-for-all-the-context/
+2026-06-26 00:04:46,348 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:46,359 INFO [__main__] Summarized https://www.ibm.com/think/topics/ai-agent-deployment
+2026-06-26 00:04:50,821 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:04:50,824 INFO [__main__] Summarized https://sedai.io/blog/ai-failed-human-benchmark
+2026-06-26 00:05:01,890 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:05:01,892 INFO [__main__] Summarized https://tech.einnews.com/pr_news/921958846/pearl-education-launches-grade-an-open-benchmark-for-evaluating-ai-on-education-program-data
+2026-06-26 00:05:06,070 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:05:06,080 INFO [__main__] Summarized https://www.linkedin.com/posts/parikshitpruthi_palantir-just-broke-your-ai-benchmark-obsession-activity-7475778576059932673-zWEp
+2026-06-26 00:05:11,737 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:05:11,740 INFO [__main__] Summarized https://www.rand.org/pubs/research_reports/RRA3892-2.html
+2026-06-26 00:05:17,003 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:05:17,011 INFO [__main__] Summarized https://www.getaleph.com/answers/cac-payback-period-saas-2026
+2026-06-26 00:05:17,011 INFO [__main__] Generating report
+2026-06-26 00:05:42,543 INFO [httpx] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-06-26 00:05:42,549 INFO [__main__] Stored report at ./report.html
+2026-06-26 00:05:42,549 INFO [__main__] Emailing report
+2026-06-26 00:05:46,441 INFO [__main__] Email sent to bhusalsanjeev23@gmail.com
+```
+
+# Second approach
+
+## Running it
+
+1. Run the script:
+
+   ```sh
+   uv run ai-agent-research-assistant/script.py
+   ```
+
+## Detailed Technical Plan
+
+1. Give a search query to agent. Eg: Research on AI Agents, AI Context management, and New AI benchmarks]
+
+2. Agent understands the task and decides what tool it wants to call. There are 4 tools available:
+   1. search_google: Tool that searches google for a topic and returns its result
+   2. scrape_url: Tool that scrapes a url and returns its page contents.
+   3. save_temp_file: Tool that saves the content of a file (report) in a temporary directory.
+   4. send_email: Tool that sends the report in email
+
+3. Agent calls the tool however it wants with whatever arguments it wants. Ideally,the flow looks like the following:
+   1. Agent understands user input and sees what tools it has access to.
+   2. It calls search_google with the search query. search_google tool returns the response.
+   3. It perceives the response, filters articles that are most relevant and decides it needs to get the page contents.
+   4. It calls scrape_url for each article. scrape_url returns the page content.
+
+4. Once it has page contents for all articles, it generates a report.
 
 ## Output generated
 
