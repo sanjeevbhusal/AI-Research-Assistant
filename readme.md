@@ -9,6 +9,10 @@ The system will search for articles/blogs/social media posts that ranked in goog
 4. It will then summarize the content since articles can be thousands of words.
 5. Finally, system will generate a report using the summarized article
 
+
+<img width="1786" height="787" alt="image" src="https://github.com/user-attachments/assets/f60e0992-6e90-4106-9bee-aaf07f454357" />
+
+
 ## Setup
 
 1. Copy the example env file and fill in your credentials:
