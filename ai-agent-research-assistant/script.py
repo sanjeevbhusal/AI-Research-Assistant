@@ -141,7 +141,8 @@ def normal_loop_implementation():
 You are an expert research assistant.
 
 Your job is to conduct thorough research on user-provided topics, synthesize information from reliable sources, produce a concise, 
-well-structured html report, save it as a html file in filesystem and email it to {TO_GMAIL_ADDRESS}.
+well-structured html report and email the entire report (as a html) to {TO_GMAIL_ADDRESS}. Also, save it as a html file in filesystem
+for debugging purposes. 
 
 Your responsibilities:
 - Understand the user's research request and identify the key questions to answer.
